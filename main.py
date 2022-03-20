@@ -96,30 +96,36 @@ def bot_polling():
 
 
 def define_acquaintance_request_answer(message):
+    is_moderator = str(message.chat.id) == moderator.id
+    is_maintainer = message.chat.username == maintainer
     global memSender
     if memSender is None:
         memSender = mem_sender.MemSender()
     if message.chat.username == maintainer:
         bot.send_message(message.chat.id, "Отлично, начинаем. Id игры = " + str(memSender.game_id),
-                         reply_markup=keyboard.getStartKeyboard())
+                         reply_markup=keyboard.getStartKeyboard(is_moderator, is_maintainer))
         bot.send_message(message.chat.id, "Введите размер группы: ",
-                         reply_markup=keyboard.getStartKeyboard())
+                         reply_markup=keyboard.getStartKeyboard(is_moderator, is_maintainer))
     else:
         bot.send_message(message.chat.id, "Введи id игры:",
-                         reply_markup=keyboard.getStartKeyboard())
+                         reply_markup=keyboard.getStartKeyboard(is_moderator, is_maintainer))
 
 
 def define_id_request_answer(message):
+    is_moderator = str(message.chat.id) == moderator.id
+    is_maintainer = message.chat.username == maintainer
     if int(message.text) == memSender.game_id:
         if message.chat.id not in memSender.participants:
             memSender.add_participant(message.chat.id)
         bot.send_message(message.chat.id, "Поздравляю ты в игре! Жди от меня мема 😎",
-                         reply_markup=keyboard.getStartKeyboard())
+                         reply_markup=keyboard.getStartKeyboard(is_moderator, is_maintainer))
     else:
-        bot.send_message(message.chat.id, "Неверный id!", reply_markup=keyboard.getStartKeyboard())
+        bot.send_message(message.chat.id, "Неверный id!", reply_markup=keyboard.getStartKeyboard(is_moderator, is_maintainer))
 
 
 def define_group_number_answer(message):
+    is_moderator = str(message.chat.id) == moderator.id
+    is_maintainer = message.chat.username == maintainer
     gr_number = int(message.text)
     if gr_number in range(2, 11):
         memSender.group_number = gr_number
@@ -127,7 +133,7 @@ def define_group_number_answer(message):
                          reply_markup=keyboard.getGameKeyboard())
     else:
         bot.send_message(message.chat.id, 'Не подойдет. Размер группы должен быть от 2 до 10 человек',
-                         reply_markup=keyboard.getStartKeyboard())
+                         reply_markup=keyboard.getStartKeyboard(is_moderator, is_maintainer))
 
 
 def find_appeal(chat_id):
