@@ -1,0 +1,14 @@
+[Unit]
+Description=Upgrade Bot
+After=network.target
+
+[Service]
+User=nikita
+Group=nikita
+
+WorkingDirectory=/home/nikita/upgradeBot/
+Environment="PYTHONPATH=/home/nikita/upgradeBot/"
+ExecStart=/usr/bin/python3 /home/nikita/upgradeBot/main.py
+
+[Install]
+WantedBy=multi-user.target
