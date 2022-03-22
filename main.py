@@ -7,7 +7,7 @@ from moderator import Moderator
 import mem_sender
 import keyboard
 
-BOT_TOKEN = '5220584349:AAEkFDYaK03gWGYRdy2qN-lKr8Y2ysoBg2s'
+BOT_TOKEN = ''
 BOT_INTERVAL = 3
 BOT_TIMEOUT = 30
 
