@@ -302,7 +302,4 @@ def bot_actions():
             bot.send_message(message.chat.id, keyboard.replied, reply_markup=keyboard.getStartKeyboard(is_moderator, is_maintainer))
 
 
-print("New bot instance started")
-init()
-bot_actions()
-bot.polling(none_stop=True, interval=BOT_INTERVAL, timeout=BOT_TIMEOUT)
+bot_polling()
