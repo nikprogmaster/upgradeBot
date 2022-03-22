@@ -7,7 +7,7 @@ from moderator import Moderator
 import mem_sender
 import keyboard
 
-BOT_TOKEN = ''
+BOT_TOKEN = '5220584349:AAEkFDYaK03gWGYRdy2qN-lKr8Y2ysoBg2s'
 BOT_INTERVAL = 3
 BOT_TIMEOUT = 30
 
@@ -179,6 +179,17 @@ def get_all_needs():
     return result
 
 
+def send_everyone(message):
+    global sending_everyone
+    sending_everyone = False
+    is_moderator = str(message.chat.id) == moderator.id
+    is_maintainer = message.chat.username == maintainer
+    for m in all_members:
+        bot.forward_message(m, message.chat.id, message.id)
+    bot.send_message(message.chat.id, keyboard.replied,
+                     reply_markup=keyboard.getStartKeyboard(is_moderator, is_maintainer))
+
+
 def bot_actions():
     @bot.message_handler(commands=['start'], content_types=['text'])
     def send_welcome(message):
@@ -229,6 +240,8 @@ def bot_actions():
                                  reply_markup=keyboard.getStartKeyboard(is_moderator, is_maintainer))
                 bot.send_message(message.chat.id, keyboard.replied,
                                  reply_markup=keyboard.getStartKeyboard(is_moderator, is_maintainer))
+            elif is_maintainer and sending_everyone:
+                send_everyone(message)
 
             # region base information
             elif message.text == keyboard.timetable:
@@ -280,11 +293,16 @@ def bot_actions():
     @bot.message_handler(content_types=['text', 'audio', 'document', 'photo', 'sticker', 'video', 'video_note', 'voice', 'location', 'contact', 'poll'])
     def forwarding_messages(message):
         global sending_everyone
+        is_moderator = str(message.chat.id) == moderator.id
         is_maintainer = message.chat.username == maintainer
         if is_maintainer and sending_everyone:
             sending_everyone = False
             for m in all_members:
                 bot.forward_message(m, message.chat.id, message.id)
+            bot.send_message(message.chat.id, keyboard.replied, reply_markup=keyboard.getStartKeyboard(is_moderator, is_maintainer))
 
 
-bot_polling()
+print("New bot instance started")
+init()
+bot_actions()
+bot.polling(none_stop=True, interval=BOT_INTERVAL, timeout=BOT_TIMEOUT)
