@@ -37,7 +37,7 @@ def getStartKeyboard(is_moderator, is_maintainer):
     keyboard = keyboards.ReplyKeyboardMarkup(True, False)
     keyboard.row(timetable, acquaintance, chat)
     keyboard.row(write_prayer_need, ask_tricky_question, social_media)
-    if not is_moderator:
+    if not is_moderator and not is_maintainer:
         keyboard.row(help)
     if is_maintainer:
         keyboard.row(send_everyone, show_all_needs, show_all_questions)
