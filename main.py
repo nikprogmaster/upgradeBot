@@ -142,13 +142,13 @@ def find_appeal(chat_id):
 
 def save_question(question):
     f = open("files/tricky_questions.txt", "a", encoding="utf-8")
-    f.write(question)
+    f.write(question + "\n")
     f.close()
 
 
 def save_need(need):
     f = open("files/prayer_needs.txt", "a", encoding="utf-8")
-    f.write(need)
+    f.write(need + "\n")
     f.close()
 
 
@@ -159,6 +159,24 @@ def save_member(chat_id):
         all_members.append(chat_id)
         f.write(str(chat_id) + "\n")
     f.close()
+
+
+def get_all_questions():
+    result = ""
+    f = open('files/tricky_questions.txt', 'r', encoding="utf-8")
+    for line in f:
+        result += line
+    f.close()
+    return result
+
+
+def get_all_needs():
+    result = ""
+    f = open('files/prayer_needs.txt', 'r', encoding="utf-8")
+    for line in f:
+        result += line
+    f.close()
+    return result
 
 
 def bot_actions():
@@ -186,17 +204,17 @@ def bot_actions():
             is_maintainer = message.chat.username == maintainer
 
             # region handling queries
-            if appeal is not None and appeal == DialogCondition.HELP:
+            if appeal is not None and appeal == DialogCondition.HELP and message.text != keyboard.main:
                 bot.send_message(moderator.id, message.text, reply_markup=keyboard.getReplyKeyBoard(message.chat.id))
                 bot.send_message(message.chat.id, keyboard.thanks_for_question,
                                  reply_markup=keyboard.getStartKeyboard(is_moderator, is_maintainer))
                 bot_active_dialogs.pop(message.chat.id)
-            elif appeal is not None and appeal == DialogCondition.TRICKY_QUESTION:
+            elif appeal is not None and appeal == DialogCondition.TRICKY_QUESTION and message.text != keyboard.main:
                 bot.send_message(message.chat.id, keyboard.thanks_for_tricky_question,
                                  reply_markup=keyboard.getStartKeyboard(is_moderator, is_maintainer))
                 bot_active_dialogs.pop(message.chat.id)
                 save_question(message.text)
-            elif appeal is not None and appeal == DialogCondition.PRAYER_NEED:
+            elif appeal is not None and appeal == DialogCondition.PRAYER_NEED and message.text != keyboard.main:
                 bot.send_message(message.chat.id, keyboard.we_will_pray,
                                  reply_markup=keyboard.getStartKeyboard(is_moderator, is_maintainer))
                 bot_active_dialogs.pop(message.chat.id)
@@ -230,9 +248,13 @@ def bot_actions():
                 bot_active_dialogs[message.chat.id] = DialogCondition.PRAYER_NEED
             elif message.text == keyboard.acquaintance:
                 define_acquaintance_request_answer(message)
+            elif message.text == keyboard.show_all_questions:
+                bot.send_message(message.chat.id, get_all_questions(), reply_markup=keyboard.getStartKeyboard(is_moderator, is_maintainer))
+            elif message.text == keyboard.show_all_needs:
+                bot.send_message(message.chat.id, get_all_needs(), reply_markup=keyboard.getStartKeyboard(is_moderator, is_maintainer))
             elif message.text == keyboard.send_everyone:
                 sending_everyone = True
-                m = bot.send_message(message.chat.id, keyboard.type_message, reply_markup=keyboard.getStartKeyboard(is_moderator, is_maintainer))
+                bot.send_message(message.chat.id, keyboard.type_message, reply_markup=keyboard.getStartKeyboard(is_moderator, is_maintainer))
 
             # region game elifs
             elif message.chat.username != maintainer and message.text.isdigit():

@@ -16,6 +16,8 @@ start_game = "Начать знакомство"
 parts_number = "Количество участников"
 finish_game = "Завершить игру"
 send_everyone = "Отправить всем"
+show_all_questions = "Все каверзные вопросы"
+show_all_needs = "Все нужды"
 
 # Ответы бота
 thanks_for_question = "Спасибо за твой вопрос. Мы постараемся ответить как можно скорее!"
@@ -38,7 +40,7 @@ def getStartKeyboard(is_moderator, is_maintainer):
     if not is_moderator:
         keyboard.row(help)
     if is_maintainer:
-        keyboard.row(send_everyone)
+        keyboard.row(send_everyone, show_all_needs, show_all_questions)
     return keyboard
 
 
