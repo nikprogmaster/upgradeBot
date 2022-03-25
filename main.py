@@ -185,7 +185,10 @@ def send_everyone(message):
     is_moderator = str(message.chat.id) == moderator.id
     is_maintainer = message.chat.username == maintainer
     for m in all_members:
-        bot.forward_message(m, message.chat.id, message.id)
+        try:
+            bot.forward_message(m, message.chat.id, message.id)
+        except Exception as error:
+            print(error)
     bot.send_message(message.chat.id, keyboard.replied,
                      reply_markup=keyboard.getStartKeyboard(is_moderator, is_maintainer))
 
