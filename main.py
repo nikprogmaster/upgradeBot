@@ -240,6 +240,7 @@ def bot_actions():
                                  reply_markup=keyboard.getStartKeyboard(is_moderator, is_maintainer))
                 bot.send_message(message.chat.id, keyboard.replied,
                                  reply_markup=keyboard.getStartKeyboard(is_moderator, is_maintainer))
+                moderator.opponent_id = ""
             elif is_maintainer and sending_everyone:
                 send_everyone(message)
 
